@@ -1,0 +1,48 @@
+rules_version = '2';
+service cloud.firestore {
+  match /databases/{database}/documents {
+
+    function signedIn() { return request.auth != null; }
+
+    function userDoc() {
+      return get(/databases/$(database)/documents/users/$(request.auth.uid)).data;
+    }
+    function hasProfile() {
+      return signedIn() &&
+        exists(/databases/$(database)/documents/users/$(request.auth.uid));
+    }
+    function isActive() {
+      return hasProfile() && userDoc().active != false;
+    }
+    function isAdmin() {
+      return hasProfile() && userDoc().role == 'admin';
+    }
+
+    // بەکارهێنەران — تەنها بەڕێوەبەر دەیانگۆڕێت
+    match /users/{uid} {
+      allow read: if signedIn() && (request.auth.uid == uid || isAdmin());
+      allow write: if isAdmin();
+    }
+
+    // کڕیارەکان
+    match /customers/{id} {
+      allow read: if isActive();
+      allow create, update: if isActive();
+      allow delete: if isAdmin();
+    }
+
+    // قەرزەکان
+    match /debts/{id} {
+      allow read: if isActive();
+      allow create, update: if isActive();
+      allow delete: if isAdmin();
+    }
+
+    // پارەدانەوەکان
+    match /payments/{id} {
+      allow read: if isActive();
+      allow create, update: if isActive();
+      allow delete: if isActive();
+    }
+  }
+}

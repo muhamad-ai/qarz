@@ -1,0 +1,17 @@
+{
+  "name": "قەرزی کڕیار",
+  "short_name": "قەرزی کڕیار",
+  "description": "سیستەمی بەڕێوەبردنی قەرزی کڕیار — مارکێتی بەهەند",
+  "lang": "ckb",
+  "dir": "rtl",
+  "start_url": "./index.html",
+  "scope": "./",
+  "display": "standalone",
+  "orientation": "portrait-primary",
+  "background_color": "#0f172a",
+  "theme_color": "#2563eb",
+  "icons": [
+    { "src": "assets/icons/icon-192.png", "sizes": "192x192", "type": "image/png", "purpose": "any maskable" },
+    { "src": "assets/icons/icon-512.png", "sizes": "512x512", "type": "image/png", "purpose": "any maskable" }
+  ]
+}

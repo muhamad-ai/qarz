@@ -1,0 +1,358 @@
+<!DOCTYPE html>
+<html lang="ckb" dir="rtl">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>قەرزی کڕیار</title>
+  <link rel="stylesheet" href="assets/css/style.css">
+  <link rel="manifest" href="manifest.json">
+  <meta name="theme-color" content="#2563eb">
+  <link rel="apple-touch-icon" href="assets/icons/icon-192.png">
+  <meta name="apple-mobile-web-app-capable" content="yes">
+  <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+</head>
+<body>
+
+<div class="app" id="app">
+  <!-- ============ سایدبار ============ -->
+  <aside class="sidebar">
+    <div class="brand">
+      <div class="brand-icon">
+        <svg viewBox="0 0 24 24" width="24" height="24" fill="none" stroke="#fff" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round">
+          <path d="M3 7.5A1.5 1.5 0 0 1 4.5 6H18a2 2 0 0 1 2 2v1"/>
+          <path d="M3 7.5V17a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-4H16a2.5 2.5 0 0 1 0-5h5"/>
+          <circle cx="16.5" cy="12.5" r="1"/>
+        </svg>
+      </div>
+      <div class="brand-text">
+        <b>سیستەمی قەرز</b>
+        <span>بەڕێوەبردنی قەرز و پارەدانەوە</span>
+      </div>
+    </div>
+
+    <nav class="nav" id="nav">
+      <a class="nav-item active" data-page="dashboard"><span class="ic">📊</span> داشبۆرد</a>
+      <a class="nav-item" data-page="customers"><span class="ic">👤</span> کڕیارەکان</a>
+      <a class="nav-item" data-page="debts"><span class="ic">🧾</span> قەرزەکان</a>
+      <a class="nav-item" data-page="reports"><span class="ic">📈</span> ڕاپۆرت</a>
+      <a class="nav-item nav-admin-only" data-page="users"><span class="ic">🔐</span> بەکارهێنەران</a>
+    </nav>
+
+    <div class="sidebar-foot">
+      <div class="user-chip">
+        <div class="user-avatar" id="userAvatar">A</div>
+        <div>
+          <b id="userName">بەکارهێنەر</b>
+          <span id="userRole">ڕۆڵ</span>
+        </div>
+      </div>
+      <button class="btn btn-ghost btn-block" id="logoutBtn">🚪 دەرچوون</button>
+    </div>
+  </aside>
+
+  <!-- ============ ناوەڕۆک ============ -->
+  <main class="main">
+
+    <!-- ---------- داشبۆرد ---------- -->
+    <section class="page active" id="page-dashboard">
+      <div class="page-head">
+        <div>
+          <h1>📊 داشبۆرد</h1>
+          <div class="sub">پوختەی گشتی قەرز و پارەدانەوەکان</div>
+        </div>
+        <button class="btn btn-ghost menu-toggle" onclick="document.body.classList.toggle('nav-open')">☰</button>
+      </div>
+
+      <div class="stat-grid" id="statGrid"></div>
+
+      <div class="card">
+        <div class="card-title">📈 ئاماری مانگانە</div>
+        <div class="card-sub">بەراوردی قەرز و پارەدانەوە بۆ ١٢ مانگی ڕابردوو</div>
+        <div class="chart-box"><canvas id="monthlyChart"></canvas></div>
+        <div class="legend">
+          <span><i style="background:#dc2626"></i> قەرز</span>
+          <span><i style="background:#16a34a"></i> پارەدانەوە</span>
+        </div>
+      </div>
+    </section>
+
+    <!-- ---------- کڕیارەکان ---------- -->
+    <section class="page" id="page-customers">
+      <div class="page-head">
+        <div><h1>👤 کڕیارەکان</h1><div class="sub">بەڕێوەبردنی زانیاری کڕیارەکان</div></div>
+        <div class="head-actions">
+          <button class="btn" onclick="Customers.openForm()">➕ کڕیاری نوێ</button>
+        </div>
+      </div>
+      <div class="toolbar">
+        <div class="search-box">
+          <span class="ic">🔍</span>
+          <input autocomplete="off" class="input" id="custSearch" placeholder="گەڕان بە ناو یان ژمارەی مۆبایل...">
+        </div>
+      </div>
+      <div class="table-wrap">
+        <div class="table-scroll">
+          <table id="custTable">
+            <thead>
+              <tr>
+                <th class="sortable" data-key="name">ناو</th>
+                <th class="sortable" data-key="phone">مۆبایل</th>
+                <th>ناونیشان</th>
+                <th class="sortable" data-key="total_debt">کۆی قەرز</th>
+                <th class="sortable" data-key="remaining">ماوە</th>
+                <th>تێبینی</th>
+                <th>کردار</th>
+              </tr>
+            </thead>
+            <tbody id="custBody"></tbody>
+          </table>
+        </div>
+        <div class="pager" id="custPager"></div>
+      </div>
+    </section>
+
+    <!-- ---------- قەرزەکان ---------- -->
+    <section class="page" id="page-debts">
+      <div class="page-head">
+        <div><h1>🧾 قەرزەکان</h1><div class="sub">قەرزی کڕیارەکان — کلیک لەسەر کڕیار بۆ بینینی وردەکاری و پارەدانەوە</div></div>
+        <div class="head-actions">
+          <button class="btn" onclick="Debts.openForm()">➕ قەرزی نوێ</button>
+        </div>
+      </div>
+      <div class="toolbar">
+        <div class="search-box">
+          <span class="ic">🔍</span>
+          <input autocomplete="off" class="input" id="debtSearch" placeholder="گەڕان بە ناوی کڕیار...">
+        </div>
+        <select class="input" id="debtStatus" style="max-width:190px">
+          <option value="">هەموو دۆخەکان</option>
+          <option value="نەدراوە">نەدراوە</option>
+          <option value="بەشێک دراوە">بەشێک دراوە</option>
+          <option value="تەواو دراوە">تەواو دراوە</option>
+        </select>
+        <button class="btn btn-ghost btn-sm" onclick="Debts.clearFilters()">پاککردنەوە</button>
+      </div>
+      <input autocomplete="off" class="input" type="date" id="debtFrom" style="display:none">
+      <input autocomplete="off" class="input" type="date" id="debtTo" style="display:none">
+      <div id="debtBody" class="rec-cards"></div>
+      <div class="pager" id="debtPager"></div>
+    </section>
+
+    <!-- ---------- ڕاپۆرت ---------- -->
+    <section class="page" id="page-reports">
+      <div class="page-head">
+        <div><h1>📈 ڕاپۆرت</h1><div class="sub">ڕاپۆرتی ڕۆژانە، هەفتانە، مانگانە و ساڵانە</div></div>
+        <div class="head-actions">
+          <button class="btn btn-success" onclick="Reports.exportFile('excel')">📊 Excel</button>
+          <button class="btn btn-danger" onclick="Reports.exportFile('pdf')">📄 PDF</button>
+          <button class="btn btn-ghost" onclick="Reports.printReport()">🖨️ چاپ</button>
+        </div>
+      </div>
+
+      <div class="tab-row" id="reportTabs">
+        <button class="tab-btn active" data-period="daily">ڕۆژانە</button>
+        <button class="tab-btn" data-period="weekly">هەفتانە</button>
+        <button class="tab-btn" data-period="monthly">مانگانە</button>
+        <button class="tab-btn" data-period="yearly">ساڵانە</button>
+      </div>
+
+      <div class="report-summary" id="reportSummary"></div>
+      <div id="reportBody" class="rec-cards"></div>
+    </section>
+
+    <!-- ---------- پاڵپشت ---------- -->
+    <section class="page" id="page-backup">
+      <div class="page-head">
+        <div><h1>💾 پاڵپشت</h1><div class="sub">پاراستن و گەڕاندنەوەی داتابەیس</div></div>
+      </div>
+      <div class="info-banner">
+        <span class="ic">ℹ️</span>
+        <div>سیستەمەکە هەموو ڕۆژێک بەشێوەی خۆکار پاڵپشتێک دروست دەکات. دەتوانیت بەدەستیش پاڵپشت دروست بکەیت و لە هەر شوێنێک هەڵیبگریت.</div>
+      </div>
+      <div id="onedriveStatus" class="info-banner" style="display:none"></div>
+      <div class="backup-actions">
+        <button class="btn btn-accent" onclick="Backup.create()">💾 دروستکردنی پاڵپشتی نوێ</button>
+        <button class="btn btn-ghost nav-admin-only" style="display:none" onclick="document.getElementById('restoreFile').click()">📤 گەڕاندنەوە لە فایل</button>
+        <input autocomplete="off" type="file" id="restoreFile" accept=".db" style="display:none" onchange="Backup.uploadRestore(this)">
+      </div>
+      <div class="table-wrap">
+        <div class="table-scroll">
+          <table>
+            <thead><tr><th>ناوی فایل</th><th>قەبارە</th><th>بەروار</th><th>کردار</th></tr></thead>
+            <tbody id="backupBody"></tbody>
+          </table>
+        </div>
+      </div>
+    </section>
+
+    <!-- ---------- بەکارهێنەران ---------- -->
+    <section class="page" id="page-users">
+      <div class="page-head">
+        <div><h1>🔐 بەکارهێنەران</h1><div class="sub">بەڕێوەبردنی هەژمار و دەسەڵاتەکان</div></div>
+        <div class="head-actions">
+          <button class="btn" onclick="Users.openForm()">➕ بەکارهێنەری نوێ</button>
+        </div>
+      </div>
+      <div class="table-wrap">
+        <div class="table-scroll">
+          <table>
+            <thead><tr><th>ناوی بەکارهێنەر</th><th>ناوی تەواو</th><th>ڕۆڵ</th><th>دۆخ</th><th>کردار</th></tr></thead>
+            <tbody id="usersBody"></tbody>
+          </table>
+        </div>
+      </div>
+    </section>
+
+  </main>
+</div>
+
+<!-- ============ مۆداڵەکان ============ -->
+<!-- مۆداڵی کڕیار -->
+<div class="modal-overlay" id="custModal">
+  <div class="modal">
+    <div class="modal-head"><h3 id="custModalTitle">کڕیاری نوێ</h3><button class="btn-icon" onclick="closeModal('custModal')">✕</button></div>
+    <div class="modal-body">
+      <input autocomplete="off" type="hidden" id="custId">
+      <div class="field"><label>ناوی کڕیار *</label><input autocomplete="off" class="input" id="custName" required></div>
+      <div class="grid-2">
+        <div class="field"><label>ژمارەی مۆبایل</label><input autocomplete="off" class="input" id="custPhone" inputmode="tel"></div>
+        <div class="field"><label>ناونیشان</label><input autocomplete="off" class="input" id="custAddress"></div>
+      </div>
+      <div class="field"><label>تێبینی</label><textarea id="custNotes"></textarea></div>
+    </div>
+    <div class="modal-foot">
+      <button class="btn" onclick="Customers.save()">پاشەکەوتکردن</button>
+      <button class="btn btn-ghost" onclick="closeModal('custModal')">هەڵوەشاندنەوە</button>
+    </div>
+  </div>
+</div>
+
+<!-- مۆداڵی قەرز -->
+<div class="modal-overlay" id="debtModal">
+  <div class="modal">
+    <div class="modal-head"><h3 id="debtModalTitle">قەرزی نوێ</h3><button class="btn-icon" onclick="closeModal('debtModal')">✕</button></div>
+    <div class="modal-body">
+      <input autocomplete="off" type="hidden" id="debtId">
+      <div class="field"><label>کڕیار *</label><select class="input" id="debtCustomer"></select></div>
+      <div class="grid-2">
+        <div class="field"><label>بەروار *</label><input autocomplete="off" class="input" type="date" id="debtDate"></div>
+        <div class="field"><label>بڕی پارە (دینار) *</label><input autocomplete="off" class="input" type="number" id="debtAmount" min="0" step="250"></div>
+      </div>
+      <div class="field"><label>بابەت</label><input autocomplete="off" class="input" id="debtSubject" list="subjectList" placeholder="نموونە: کاڵا، خزمەتگوزاری..."><datalist id="subjectList"></datalist></div>
+      <div class="field"><label>تێبینی</label><textarea id="debtNotes"></textarea></div>
+    </div>
+    <div class="modal-foot">
+      <button class="btn" onclick="Debts.save()">پاشەکەوتکردن</button>
+      <button class="btn btn-ghost" onclick="closeModal('debtModal')">هەڵوەشاندنەوە</button>
+    </div>
+  </div>
+</div>
+
+<!-- مۆداڵی پارەدانەوەکان -->
+<div class="modal-overlay" id="payModal">
+  <div class="modal wide">
+    <div class="modal-head"><h3>💵 پارەدانەوەکان</h3><button class="btn-icon" onclick="closeModal('payModal')">✕</button></div>
+    <div class="modal-body">
+      <div id="payDebtInfo" class="info-banner" style="margin-bottom:18px"></div>
+
+      <div class="grid-2" style="align-items:end">
+        <div class="field"><label>بەرواری پارەدانەوە</label><input autocomplete="off" class="input" type="date" id="payDate"></div>
+        <div class="field"><label>بڕی پارە (دینار)</label><input autocomplete="off" class="input" type="number" id="payAmount" min="0" step="250"></div>
+      </div>
+      <div class="field"><label>تێبینی</label><input autocomplete="off" class="input" id="payNotes"></div>
+      <button class="btn btn-success" style="margin-bottom:20px" onclick="Payments.add()">➕ زیادکردنی پارەدانەوە</button>
+
+      <div class="table-wrap">
+        <table>
+          <thead><tr><th>بەروار</th><th>بڕ</th><th>تێبینی</th><th>کردار</th></tr></thead>
+          <tbody id="payBody"></tbody>
+        </table>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- مۆداڵی قەرزەکانی کڕیار (کۆی گشتی + پارەدانەوە) -->
+<div class="modal-overlay" id="custDebtsModal">
+  <div class="modal wide">
+    <div class="modal-head"><h3 id="cdTitle">💳 قەرزەکانی کڕیار</h3><button class="btn-icon" onclick="closeModal('custDebtsModal')">✕</button></div>
+    <div class="modal-body">
+      <div class="cd-summary" id="cdSummary"></div>
+
+      <div class="cd-pay">
+        <div class="cd-pay-title">➕ پارەدانەوە بۆ کۆی قەرز</div>
+        <div class="grid-3" style="align-items:end">
+          <div class="field"><label>بەروار</label><input autocomplete="off" class="input" type="date" id="cdPayDate"></div>
+          <div class="field"><label>بڕی پارە (دینار)</label><input autocomplete="off" class="input" type="number" id="cdPayAmount" min="0" step="250"></div>
+          <div class="field"><label>تێبینی</label><input autocomplete="off" class="input" id="cdPayNotes"></div>
+        </div>
+        <button class="btn btn-success" onclick="CustomerDebts.pay()">💵 تۆمارکردنی پارەدانەوە</button>
+      </div>
+
+      <div class="cd-statement-head">
+        <div class="cd-st-title">📋 کشف حساب</div>
+        <button class="btn btn-ghost btn-sm" onclick="CustomerDebts.printStatement()">🖨️ چاپی کشف حساب</button>
+      </div>
+      <div class="table-wrap">
+        <table class="statement-table">
+          <thead><tr>
+            <th>بەروار</th><th>جۆر</th><th>بابەت</th>
+            <th>قەرز (+)</th><th>پارە دانەوە (−)</th><th>باڵانس</th><th></th>
+          </tr></thead>
+          <tbody id="cdStatement"></tbody>
+        </table>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- مۆداڵی بەکارهێنەر -->
+<div class="modal-overlay" id="userModal">
+  <div class="modal">
+    <div class="modal-head"><h3 id="userModalTitle">بەکارهێنەری نوێ</h3><button class="btn-icon" onclick="closeModal('userModal')">✕</button></div>
+    <div class="modal-body">
+      <input autocomplete="off" type="hidden" id="userId">
+      <div class="grid-2">
+        <div class="field"><label>ناوی بەکارهێنەر *</label><input autocomplete="off" class="input" id="uUsername"></div>
+        <div class="field"><label>ناوی تەواو</label><input autocomplete="off" class="input" id="uFullName"></div>
+      </div>
+      <div class="grid-2">
+        <div class="field"><label>وشەی نهێنی <span id="pwHint" style="color:var(--muted);font-weight:400"></span></label><input autocomplete="off" class="input" type="password" id="uPassword"></div>
+        <div class="field"><label>ڕۆڵ *</label>
+          <select class="input" id="uRole">
+            <option value="user">بەکارهێنەر (User)</option>
+            <option value="admin">بەڕێوەبەر (Admin)</option>
+          </select>
+        </div>
+      </div>
+    </div>
+    <div class="modal-foot">
+      <button class="btn" onclick="Users.save()">پاشەکەوتکردن</button>
+      <button class="btn btn-ghost" onclick="closeModal('userModal')">هەڵوەشاندنەوە</button>
+    </div>
+  </div>
+</div>
+
+<!-- مۆداڵی دڵنیابوونەوە -->
+<div class="modal-overlay" id="confirmModal">
+  <div class="modal" style="max-width:420px">
+    <div class="modal-head"><h3 id="confirmTitle">دڵنیایت؟</h3></div>
+    <div class="modal-body"><p id="confirmText"></p></div>
+    <div class="modal-foot">
+      <button class="btn btn-danger" id="confirmYes">بەڵێ، بیسڕەوە</button>
+      <button class="btn btn-ghost" onclick="closeModal('confirmModal')">نەخێر</button>
+    </div>
+  </div>
+</div>
+
+<div id="toasts"></div>
+
+<script src="https://www.gstatic.com/firebasejs/10.12.0/firebase-app-compat.js"></script>
+<script src="https://www.gstatic.com/firebasejs/10.12.0/firebase-auth-compat.js"></script>
+<script src="https://www.gstatic.com/firebasejs/10.12.0/firebase-firestore-compat.js"></script>
+<script src="firebase-config.js"></script>
+<script src="assets/js/chart.umd.js"></script>
+<script src="assets/js/db.js"></script>
+<script src="assets/js/app.js"></script>
+</body>
+</html>

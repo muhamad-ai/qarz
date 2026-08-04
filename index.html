@@ -1,0 +1,80 @@
+<!DOCTYPE html>
+<html lang="ckb" dir="rtl">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>قەرزی کڕیار — چوونەژوورەوە</title>
+  <link rel="stylesheet" href="assets/css/style.css">
+  <link rel="manifest" href="manifest.json">
+  <meta name="theme-color" content="#2563eb">
+  <link rel="apple-touch-icon" href="assets/icons/icon-192.png">
+  <meta name="apple-mobile-web-app-capable" content="yes">
+  <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+</head>
+<body>
+  <div class="login-wrap">
+    <div class="login-card">
+      <div class="login-logo">
+        <svg viewBox="0 0 24 24" width="40" height="40" fill="none" stroke="#fff" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round">
+          <path d="M3 7.5A1.5 1.5 0 0 1 4.5 6H18a2 2 0 0 1 2 2v1"/>
+          <path d="M3 7.5V17a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-4H16a2.5 2.5 0 0 1 0-5h5"/>
+          <circle cx="16.5" cy="12.5" r="1"/>
+        </svg>
+      </div>
+      <div class="login-title">سیستەمی قەرزی کڕیار</div>
+      <div class="login-sub">بەڕێوەبردنی قەرز و پارەدانەوە — ئۆنلاین</div>
+
+      <div id="loginError" class="form-error"></div>
+      <form id="loginForm">
+        <div class="field">
+          <label for="email">ئیمەیل</label>
+          <input class="input" type="email" id="email" autocomplete="username" required autofocus>
+        </div>
+        <div class="field">
+          <label for="password">وشەی نهێنی</label>
+          <div class="pw-wrap">
+            <input class="input" type="password" id="password" autocomplete="current-password" required>
+            <button type="button" class="pw-toggle" id="pwToggle" tabindex="-1">👁️</button>
+          </div>
+        </div>
+        <button type="submit" class="btn btn-block" id="loginBtn">چوونەژوورەوە</button>
+      </form>
+    </div>
+  </div>
+
+  <script src="https://www.gstatic.com/firebasejs/10.12.0/firebase-app-compat.js"></script>
+  <script src="https://www.gstatic.com/firebasejs/10.12.0/firebase-auth-compat.js"></script>
+  <script src="https://www.gstatic.com/firebasejs/10.12.0/firebase-firestore-compat.js"></script>
+  <script src="firebase-config.js"></script>
+  <script src="assets/js/db.js"></script>
+  <script>
+    document.getElementById("pwToggle").addEventListener("click", () => {
+      const p = document.getElementById("password"), t = document.getElementById("pwToggle");
+      if (p.type === "password") { p.type = "text"; t.textContent = "🙈"; }
+      else { p.type = "password"; t.textContent = "👁️"; }
+    });
+
+    // ئەگەر پێشتر چووبێتە ژوورەوە
+    DB.onAuth((user) => { if (user) location.href = "app.html"; });
+
+    const form = document.getElementById("loginForm");
+    const errBox = document.getElementById("loginError");
+    const btn = document.getElementById("loginBtn");
+    form.addEventListener("submit", async (e) => {
+      e.preventDefault();
+      errBox.classList.remove("show");
+      btn.disabled = true; btn.textContent = "چاوەڕوانبە...";
+      try {
+        await DB.login(document.getElementById("email").value.trim(), document.getElementById("password").value);
+        location.href = "app.html";
+      } catch (err) {
+        let msg = "ئیمەیل یان وشەی نهێنی هەڵەیە";
+        if (err.code === "auth/too-many-requests") msg = "هەوڵی زۆر — کەمێک چاوەڕوانبە";
+        errBox.textContent = msg; errBox.classList.add("show");
+        btn.disabled = false; btn.textContent = "چوونەژوورەوە";
+      }
+    });
+  </script>
+  <script>if("serviceWorker" in navigator){window.addEventListener("load",function(){navigator.serviceWorker.register("sw.js").catch(function(){});});}</script>
+</body>
+</html>
