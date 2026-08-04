@@ -13,7 +13,4 @@ const firebaseConfig = {
 // ناوی دوکان (لەسەر پسوڵە دەردەکەوێت)
 const STORE_NAME = "مارکێتی بەهەند";
 
-// دامەزراندن
-firebase.initializeApp(firebaseConfig);
-const auth = firebase.auth();
-const fdb = firebase.firestore();
+// تێبینی: دامەزراندنی Firebase (initializeApp, auth, fdb) لە db.js دەکرێت.

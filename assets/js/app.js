@@ -10,8 +10,7 @@ const todayISO = () => new Date().toISOString().slice(0, 10);
 const esc = (s) => (s == null ? "" : String(s).replace(/[&<>"']/g, (c) =>
   ({ "&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;", "'": "&#39;" }[c])));
 
-/* ناوی دوکان — لێرە بیگۆڕە بۆ ناوی خۆت */
-const STORE_NAME = "مارکێتی بەهەند";
+/* ناوی دوکان (STORE_NAME) لە firebase-config.js دیاریکراوە */
 
 /* لۆگۆی پسوڵە (SVG — باش لەسەر پرینتەری فێرمی دەردەکەوێت) */
 const STORE_LOGO = `<svg viewBox="0 0 64 64" width="48" height="48" style="display:block;margin:0 auto 4px">
@@ -192,7 +191,7 @@ function statusPill(status) {
 /* ================================================================
    دەستپێک
    ================================================================ */
-let CURRENT_USER = null;
+/* CURRENT_USER لە db.js دیاریکراوە */
 
 function init() {
   // چاوەڕوانی دۆخی چوونەژوورەوەی Firebase
