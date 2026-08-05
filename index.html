@@ -37,6 +37,7 @@
             <button type="button" class="pw-toggle" id="pwToggle" tabindex="-1">👁️</button>
           </div>
         </div>
+        <label class="remember"><input type="checkbox" id="rememberMe"> ناوم بیرت بێت</label>
         <button type="submit" class="btn btn-block" id="loginBtn">چوونەژوورەوە</button>
       </form>
     </div>
@@ -57,6 +58,16 @@
     // ئەگەر پێشتر چووبێتە ژوورەوە
     DB.onAuth((user) => { if (user) location.href = "app.html"; });
 
+    // ناوم بیرت بێت — پڕکردنەوەی ئیمەیل ئەگەر پێشتر هەڵگیرابوو
+    try {
+      const savedEmail = localStorage.getItem("qarz_email");
+      if (savedEmail) {
+        document.getElementById("email").value = savedEmail;
+        document.getElementById("rememberMe").checked = true;
+        document.getElementById("password").focus();
+      }
+    } catch (_) {}
+
     const form = document.getElementById("loginForm");
     const errBox = document.getElementById("loginError");
     const btn = document.getElementById("loginBtn");
@@ -64,8 +75,14 @@
       e.preventDefault();
       errBox.classList.remove("show");
       btn.disabled = true; btn.textContent = "چاوەڕوانبە...";
+      const email = document.getElementById("email").value.trim();
+      // هەڵگرتن/سڕینەوەی ئیمەیل بەپێی «ناوم بیرت بێت»
       try {
-        await DB.login(document.getElementById("email").value.trim(), document.getElementById("password").value);
+        if (document.getElementById("rememberMe").checked) localStorage.setItem("qarz_email", email);
+        else localStorage.removeItem("qarz_email");
+      } catch (_) {}
+      try {
+        await DB.login(email, document.getElementById("password").value);
         location.href = "app.html";
       } catch (err) {
         let msg = "ئیمەیل یان وشەی نهێنی هەڵەیە";

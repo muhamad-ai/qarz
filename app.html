@@ -43,6 +43,7 @@
       <a class="nav-item" data-page="debts"><span class="ic">🧾</span> قەرزەکان</a>
       <a class="nav-item" data-page="reports"><span class="ic">📈</span> ڕاپۆرت</a>
       <a class="nav-item nav-admin-only" data-page="users"><span class="ic">🔐</span> بەکارهێنەران</a>
+      <a class="nav-item nav-admin-only" data-page="backup"><span class="ic">💾</span> پاڵپشت</a>
     </nav>
 
     <div class="sidebar-foot">
@@ -169,25 +170,20 @@
     <!-- ---------- پاڵپشت ---------- -->
     <section class="page" id="page-backup">
       <div class="page-head">
-        <div><h1>💾 پاڵپشت</h1><div class="sub">پاراستن و گەڕاندنەوەی داتابەیس</div></div>
+        <div><h1>💾 پاڵپشت</h1><div class="sub">داگرتن و گەڕاندنەوەی هەموو داتاکان</div></div>
       </div>
       <div class="info-banner">
         <span class="ic">ℹ️</span>
-        <div>سیستەمەکە هەموو ڕۆژێک بەشێوەی خۆکار پاڵپشتێک دروست دەکات. دەتوانیت بەدەستیش پاڵپشت دروست بکەیت و لە هەر شوێنێک هەڵیبگریت.</div>
+        <div>داتاکان لە Firebase (گووگڵ) پارێزراون. لێرەدا دەتوانیت وێنەیەکی هەموو داتاکان (کڕیار، قەرز، پارەدانەوە) وەک فایلێک دابگریت و لە شوێنێکی سەلامەت هەڵیبگریت.</div>
       </div>
-      <div id="onedriveStatus" class="info-banner" style="display:none"></div>
-      <div class="backup-actions">
-        <button class="btn btn-accent" onclick="Backup.create()">💾 دروستکردنی پاڵپشتی نوێ</button>
-        <button class="btn btn-ghost nav-admin-only" style="display:none" onclick="document.getElementById('restoreFile').click()">📤 گەڕاندنەوە لە فایل</button>
-        <input autocomplete="off" type="file" id="restoreFile" accept=".db" style="display:none" onchange="Backup.uploadRestore(this)">
+      <div class="backup-actions" style="display:flex;gap:12px;flex-wrap:wrap;margin-top:8px">
+        <button class="btn btn-accent" onclick="Backup.download()">⬇️ داگرتنی پاڵپشت</button>
+        <button class="btn btn-ghost" onclick="document.getElementById('restoreFile').click()">📤 گەڕاندنەوە لە فایل</button>
+        <input autocomplete="off" type="file" id="restoreFile" accept=".json,application/json" style="display:none" onchange="Backup.restore(this)">
       </div>
-      <div class="table-wrap">
-        <div class="table-scroll">
-          <table>
-            <thead><tr><th>ناوی فایل</th><th>قەبارە</th><th>بەروار</th><th>کردار</th></tr></thead>
-            <tbody id="backupBody"></tbody>
-          </table>
-        </div>
+      <div class="info-banner" style="margin-top:14px;background:#fef9c3;border-color:#fde047">
+        <span class="ic">⚠️</span>
+        <div>ئامۆژگاری: باشترە هەفتانە جارێک پاڵپشت دابگریت و لە OneDrive یان Google Drive هەڵیبگریت.</div>
       </div>
     </section>
 

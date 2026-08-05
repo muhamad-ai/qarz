@@ -296,4 +296,56 @@ const DB = {
     // تەنها دۆکیومێنتی ڕۆڵ دەسڕدرێتەوە (هەژماری Auth بە Console دەسڕدرێتەوە)
     await fdb.collection("users").doc(uid).delete();
   },
+
+  // ---------------- پاڵپشت (Backup) ----------------
+  // داگرتنی هەموو داتاکان (کڕیار، قەرز، پارەدانەوە)
+  async exportData() {
+    const [customers, debts, payments] = await Promise.all([
+      fdb.collection("customers").get(),
+      fdb.collection("debts").get(),
+      fdb.collection("payments").get(),
+    ]);
+    const strip = (d) => {
+      const o = { id: d.id, ...d.data() };
+      // بەرواری سێرڤەر (Timestamp) دەکەینە دەق
+      if (o.createdAt && o.createdAt.toDate) o.createdAt = o.createdAt.toDate().toISOString();
+      return o;
+    };
+    return {
+      app: "qarz-online",
+      version: 1,
+      exported_at: new Date().toISOString(),
+      customers: customers.docs.map(strip),
+      debts: debts.docs.map(strip),
+      payments: payments.docs.map(strip),
+    };
+  },
+
+  // گەڕاندنەوەی داتا لە فایلی پاڵپشتەوە (زیادکردن بەسەر داتای ئێستا)
+  async importData(data) {
+    if (!data || data.app !== "qarz-online") throw new Error("فایلی پاڵپشت دروست نییە");
+    const sets = [
+      ["customers", data.customers || []],
+      ["debts", data.debts || []],
+      ["payments", data.payments || []],
+    ];
+    let count = 0;
+    for (const [coll, items] of sets) {
+      // بە کۆمەڵ (batch) — هەر ٤٠٠ دۆکیومێنت
+      for (let i = 0; i < items.length; i += 400) {
+        const batch = fdb.batch();
+        items.slice(i, i + 400).forEach((it) => {
+          const { id, ...rest } = it;
+          if (rest.createdAt && typeof rest.createdAt === "string") {
+            rest.createdAt = firebase.firestore.Timestamp.fromDate(new Date(rest.createdAt));
+          }
+          const ref = id ? fdb.collection(coll).doc(id) : fdb.collection(coll).doc();
+          batch.set(ref, rest, { merge: true });
+          count++;
+        });
+        await batch.commit();
+      }
+    }
+    return count;
+  },
 };

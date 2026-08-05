@@ -906,74 +906,45 @@ const Reports = {
    پاڵپشت
    ================================================================ */
 const Backup = {
-  async load() {
+  // داگرتنی هەموو داتاکان وەک فایلی JSON
+  async download() {
     try {
-      // دۆخی OneDrive
-      try {
-        const od = await API.get("/api/backup/onedrive");
-        const el = $("onedriveStatus");
-        if (od.enabled) {
-          el.innerHTML = `<span class="ic">☁️</span><div>پاڵپشتی خۆکاری ڕۆژانە بۆ OneDrive دەنێردرێت: <b>${esc(od.path)}</b></div>`;
-          el.style.background = "#f0fdf4"; el.style.borderColor = "#bbf7d0"; el.style.color = "#166534";
-        } else {
-          el.innerHTML = `<span class="ic">☁️</span><div>OneDrive نەدۆزرایەوە — پاڵپشتەکان تەنها بەشێوەی خۆماڵی هەڵدەگیرێن. بۆ پاڵپشتی دەرەکی، OneDrive دابمەزرێنە.</div>`;
-          el.style.background = "#fef9c3"; el.style.borderColor = "#fde68a"; el.style.color = "#854d0e";
-        }
-        el.style.display = "";
-      } catch (_) { /* پشتگوێخستن */ }
-
-      const rows = await API.get("/api/backup");
-      const body = $("backupBody");
-      const isAdmin = CURRENT_USER.role === "admin";
-      if (rows.length === 0) {
-        body.innerHTML = `<tr><td colspan="4"><div class="empty"><div class="big">💾</div>هیچ پاڵپشتێک نییە</div></td></tr>`;
-      } else {
-        body.innerHTML = rows.map((b) => `
-          <tr>
-            <td class="num">${esc(b.name)}</td>
-            <td class="num">${(b.size / 1024).toFixed(0)} KB</td>
-            <td class="num">${esc(b.created_at)}</td>
-            <td><div class="t-actions">
-              <button class="btn-icon" title="داگرتن" onclick="Backup.download('${esc(b.name)}')">⬇️</button>
-              ${isAdmin ? `<button class="btn-icon" title="گەڕاندنەوە" onclick="Backup.restore('${esc(b.name)}')">♻️</button>` : ""}
-            </div></td>
-          </tr>`).join("");
-      }
-    } catch (e) { toast(e.message, "err"); }
+      toast("ئامادەکردنی پاڵپشت...");
+      const data = await DB.exportData();
+      const blob = new Blob([JSON.stringify(data, null, 2)], { type: "application/json" });
+      const url = URL.createObjectURL(blob);
+      const a = document.createElement("a");
+      a.href = url;
+      a.download = `qarz-backup-${todayISO()}.json`;
+      document.body.appendChild(a); a.click(); a.remove();
+      URL.revokeObjectURL(url);
+      toast(`پاڵپشت داگیرا (${data.customers.length} کڕیار، ${data.debts.length} قەرز)`);
+    } catch (e) { toast(e.message || "داگرتن سەرنەکەوت", "err"); }
   },
 
-  async create() {
-    try { await API.post("/api/backup/create"); toast("پاڵپشت دروستکرا"); Backup.load(); }
-    catch (e) { toast(e.message, "err"); }
-  },
-
-  async download(name) {
-    try { await API.download("/api/backup/download/" + encodeURIComponent(name), name); toast("پاڵپشت داگیرا"); }
-    catch (e) { toast(e.message, "err"); }
-  },
-
-  restore(name) {
-    confirmDialog(`گەڕاندنەوە بۆ «${name}» هەموو داتای ئێستا دەگۆڕێت (پاڵپشتێکی ئاسایشی پێش گەڕاندنەوە دروست دەکرێت). دڵنیایت؟`,
-      async () => {
-        try { await API.post("/api/backup/restore/" + encodeURIComponent(name)); toast("گەڕاندنەوە سەرکەوتوو بوو"); Backup.load(); Dashboard.load(); }
-        catch (e) { toast(e.message, "err"); }
-      }, "گەڕاندنەوەی پاڵپشت");
-  },
-
-  uploadRestore(input) {
-    const file = input.files[0]; if (!file) return;
-    confirmDialog(`گەڕاندنەوە لە فایلی «${file.name}» هەموو داتای ئێستا دەگۆڕێت. دڵنیایت؟`, async () => {
-      try {
-        const fd = new FormData(); fd.append("file", file);
-        const res = await fetch("/api/backup/upload-restore", {
-          method: "POST", headers: { Authorization: "Bearer " + API.token() }, body: fd,
-        });
-        const data = await res.json().catch(() => ({}));
-        if (!res.ok) throw new Error(data.detail || "گەڕاندنەوە سەرنەکەوت");
-        toast("گەڕاندنەوە سەرکەوتوو بوو"); Backup.load(); Dashboard.load();
-      } catch (e) { toast(e.message, "err"); }
-      finally { input.value = ""; }
-    }, "گەڕاندنەوە لە فایل");
+  // گەڕاندنەوە لە فایلەوە
+  restore(input) {
+    const file = input.files[0];
+    if (!file) return;
+    const reader = new FileReader();
+    reader.onload = () => {
+      let data;
+      try { data = JSON.parse(reader.result); }
+      catch (_) { toast("فایلەکە دروست نییە", "err"); input.value = ""; return; }
+      confirmDialog(
+        `گەڕاندنەوە لە «${esc(file.name)}»؟ داتاکانی ناو فایلەکە زیاد/نوێ دەکرێنەوە بەسەر داتای ئێستا. دڵنیایت؟`,
+        async () => {
+          try {
+            toast("گەڕاندنەوە...");
+            const n = await DB.importData(data);
+            toast(`گەڕاندنەوە سەرکەوتوو بوو (${n} تۆمار)`);
+            Dashboard.load();
+          } catch (e) { toast(e.message || "گەڕاندنەوە سەرنەکەوت", "err"); }
+          finally { input.value = ""; }
+        }, "گەڕاندنەوەی پاڵپشت"
+      );
+    };
+    reader.readAsText(file);
   },
 };
 
