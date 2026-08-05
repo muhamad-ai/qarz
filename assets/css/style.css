@@ -570,6 +570,15 @@ select.input {
   .rc-figures .v { font-size: 13px; }
   .statement-table { font-size: 12px; }
   .statement-table thead th, .statement-table tbody td { padding: 7px 4px; }
+  /* شاردنەوەی ستوونی «بابەت» لەسەر شاشەی زۆر بچووک */
+  .statement-table th:nth-child(3), .statement-table td:nth-child(3) { display: none; }
+}
+
+/* لەسەر مۆبایل: ستوونی «جۆر» بشارەوە (جۆر لە ستوونەکانی +/− دیارە) */
+@media (max-width: 640px) {
+  .statement-table th:nth-child(2), .statement-table td:nth-child(2) { display: none; }
+  .statement-table td.num, .statement-table th { white-space: nowrap; }
+  .cd-statement-head { flex-wrap: wrap; gap: 8px; }
 }
 .menu-toggle { display: none; }
 
