@@ -14,6 +14,25 @@ const todayISO = () => {
 const esc = (s) => (s == null ? "" : String(s).replace(/[&<>"']/g, (c) =>
   ({ "&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;", "'": "&#39;" }[c])));
 
+/* فۆرماتی بەروار: 2026-08-05 → 05-08-2026 */
+const fmtDMY = (iso) => {
+  if (!iso) return "";
+  const [y, m, d] = iso.split("-");
+  return `${d}-${m}-${y}`;
+};
+/* نوێکردنەوەی پیشاندانی بەرواری فۆرماتکراو */
+function refreshDate(id) {
+  const inp = document.getElementById(id);
+  const show = document.getElementById(id + "_show");
+  if (inp && show) show.textContent = fmtDMY(inp.value) || "هەڵبژێرە";
+}
+/* هەرکاتێک بەروارێک گۆڕا، پیشاندانەکەی نوێ بکەرەوە */
+["input", "change"].forEach((ev) => document.addEventListener(ev, (e) => {
+  if (e.target && e.target.classList && e.target.classList.contains("date-native")) {
+    refreshDate(e.target.id);
+  }
+}));
+
 /* ناوی دوکان (STORE_NAME) لە firebase-config.js دیاریکراوە */
 
 /* لۆگۆی پسوڵە (SVG — باش لەسەر پرینتەری فێرمی دەردەکەوێت) */
@@ -464,6 +483,7 @@ const Debts = {
     $("debtId").value = d?.id || "";
     $("debtCustomer").value = d?.customerId || Debts.customers[0].id;
     $("debtDate").value = d?.date || todayISO();
+    refreshDate("debtDate");
     $("debtAmount").value = d?.amount ?? "";
     $("debtSubject").value = d?.subject || "";
     // پێشنیاری بابەت تەنها لە بابەتەکانی پێشووی خۆت
@@ -512,6 +532,7 @@ const CustomerDebts = {
     try {
       CustomerDebts.detail = await DB.customerDetail(customerId);
       $("cdPayDate").value = todayISO();
+      refreshDate("cdPayDate");
       $("cdPayAmount").value = "";
       $("cdPayNotes").value = "";
       CustomerDebts.render();

@@ -241,7 +241,12 @@
       <input autocomplete="off" type="hidden" id="debtId">
       <div class="field"><label>کڕیار *</label><select class="input" id="debtCustomer"></select></div>
       <div class="grid-2">
-        <div class="field"><label>بەروار *</label><input autocomplete="off" class="input" type="date" id="debtDate"></div>
+        <div class="field"><label>بەروار *</label>
+          <div class="date-field">
+            <input autocomplete="off" class="input date-native" type="date" id="debtDate">
+            <span class="date-show" id="debtDate_show">هەڵبژێرە</span>
+          </div>
+        </div>
         <div class="field"><label>بڕی پارە (دینار) *</label><input autocomplete="off" class="input" type="number" id="debtAmount" min="0" step="250"></div>
       </div>
       <div class="field"><label>بابەت</label><input autocomplete="off" class="input" id="debtSubject" list="subjectList" placeholder="نموونە: کاڵا، خزمەتگوزاری..."><datalist id="subjectList"></datalist></div>
@@ -288,7 +293,12 @@
       <div class="cd-pay">
         <div class="cd-pay-title">➕ پارەدانەوە بۆ کۆی قەرز</div>
         <div class="grid-3" style="align-items:end">
-          <div class="field"><label>بەروار</label><input autocomplete="off" class="input" type="date" id="cdPayDate"></div>
+          <div class="field"><label>بەروار</label>
+            <div class="date-field">
+              <input autocomplete="off" class="input date-native" type="date" id="cdPayDate">
+              <span class="date-show" id="cdPayDate_show">هەڵبژێرە</span>
+            </div>
+          </div>
           <div class="field"><label>بڕی پارە (دینار)</label><input autocomplete="off" class="input" type="number" id="cdPayAmount" min="0" step="250"></div>
           <div class="field"><label>تێبینی</label><input autocomplete="off" class="input" id="cdPayNotes"></div>
         </div>

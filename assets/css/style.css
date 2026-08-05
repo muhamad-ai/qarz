@@ -168,6 +168,16 @@ input[type="date"]::-webkit-inner-spin-button,
 input[type="date"]::-webkit-clear-button { display: none; -webkit-appearance: none; }
 input[type="date"]::-webkit-datetime-edit { text-align: right; }
 
+/* خانەی بەروار بە فۆرماتی 05-08-2026 (دەقی ناوەکی دەشاردرێتەوە، دەقی خۆمان پیشان دەدرێت) */
+.date-field { position: relative; }
+.date-field .date-native { color: transparent; }
+.date-field .date-native::-webkit-datetime-edit { color: transparent; }
+.date-field .date-native:focus { color: transparent; }
+.date-show {
+  position: absolute; right: 14px; top: 50%; transform: translateY(-50%);
+  pointer-events: none; color: var(--text); font-size: 15px; font-variant-numeric: tabular-nums;
+}
+
 /* چارت — نەهێشتنی دەرچوون و مانەوە لە ناوەڕاست */
 .chart-box canvas { max-width: 100% !important; margin: 0 auto; }
 
@@ -633,6 +643,7 @@ select.input {
   .cd-pay .field, .cd-pay .input { max-width: 100%; min-width: 0; }
   .cd-pay { overflow: hidden; }
   .field label { font-size: 13px; }
+  .date-show { font-size: 16px; }
   .cd-summary { gap: 6px; }
   .cd-sum-card .v { font-size: 14px; }
   .cd-sum-card .l { font-size: 11px; }
