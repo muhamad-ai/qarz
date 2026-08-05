@@ -153,9 +153,9 @@ textarea { resize: vertical; min-height: 70px; }
 .field { min-width: 0; }
 .grid-3, .grid-2 { min-width: 0; }
 .grid-3 .field, .grid-2 .field { min-width: 0; }
-input[type="date"] { text-align: right; }
+input[type="date"] { text-align: right; width: 100%; max-width: 100%; min-width: 0; box-sizing: border-box; }
 input[type="date"]::-webkit-datetime-edit { text-align: right; }
-input[type="date"]::-webkit-calendar-picker-indicator { margin-inline-start: 0; }
+input[type="date"]::-webkit-calendar-picker-indicator { margin-inline-start: 0; margin-inline-end: 0; }
 
 /* چارت — نەهێشتنی دەرچوون و مانەوە لە ناوەڕاست */
 .chart-box canvas { max-width: 100% !important; margin: 0 auto; }
