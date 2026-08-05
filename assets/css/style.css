@@ -622,10 +622,10 @@ select.input {
 
   .cd-statement-head { flex-wrap: wrap; gap: 8px; }
 
-  /* ---- خانەکانی فۆرم بچووکتر تا نەشکێن ---- */
-  .input, select, textarea { font-size: 14px; padding: 10px 10px; }
+  /* ---- فۆنتی خانەکان ١٦px بۆ ڕێگری لە zoomی خۆکاری مۆبایل ---- */
+  .input, select, textarea { font-size: 16px; padding: 11px 12px; }
   input[type="date"] {
-    font-size: 14px; padding: 11px 12px 11px 40px;
+    font-size: 16px; padding: 11px 12px 11px 40px;
     -webkit-appearance: none; appearance: none;
     width: 100%; max-width: 100%; min-width: 0; box-sizing: border-box;
     text-align: right;

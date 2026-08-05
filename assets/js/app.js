@@ -6,7 +6,11 @@
 const $ = (id) => document.getElementById(id);
 const fmt = (n) => Number(n || 0).toLocaleString("en-US", { maximumFractionDigits: 0 });
 const money = (n) => fmt(n) + " د.ع";
-const todayISO = () => new Date().toISOString().slice(0, 10);
+const todayISO = () => {
+  const d = new Date();
+  const p = (n) => String(n).padStart(2, "0");
+  return `${d.getFullYear()}-${p(d.getMonth() + 1)}-${p(d.getDate())}`;
+};
 const esc = (s) => (s == null ? "" : String(s).replace(/[&<>"']/g, (c) =>
   ({ "&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;", "'": "&#39;" }[c])));
 
@@ -101,12 +105,23 @@ ${LOGO_CSS}
 
 /* چاپکردن: لە وێبگەڕ بە دیالۆگی چاپ (کۆمپیوتەر: پرینتەری فێرمی هەڵبژێرە) */
 async function printDoc(html) {
-  const w = window.open("", "_blank", "width=420,height=640");
+  const w = window.open("", "_blank");
   if (!w) { toast("تکایە ڕێگە بە پەنجەرەی نوێ بدە بۆ چاپ", "err"); return; }
-  const withScript = html.replace("</body></html>",
-    `<script>function go(){window.print();setTimeout(function(){window.close();},400);}
-     if(document.fonts&&document.fonts.ready){document.fonts.ready.then(function(){setTimeout(go,150);});}else{window.onload=go;}<\/script></body></html>`);
-  w.document.open(); w.document.write(withScript); w.document.close();
+  const bar = `<div class="print-bar">
+      <button class="pr" onclick="window.print()">🖨️ چاپ / PDF</button>
+      <button class="cl" onclick="window.close()">✕ گەڕانەوە</button>
+    </div>
+    <style>.print-bar{position:sticky;top:0;display:flex;gap:10px;justify-content:center;padding:12px;background:#f1f5f9;margin:0 0 10px;}
+    .print-bar button{border:none;border-radius:10px;padding:11px 20px;font-size:15px;font-weight:700;cursor:pointer;font-family:inherit;}
+    .print-bar .pr{background:#2563eb;color:#fff;} .print-bar .cl{background:#e2e8f0;color:#0f172a;}
+    @media print{.print-bar{display:none!important;}}</style>`;
+  // تووڵامراز لە سەرەوەی body دادەنێین + چاپی خۆکار دوای بارکردنی فۆنت (بەبێ داخستنی خۆکار)
+  const withBar = html
+    .replace("<body>", "<body>" + bar)
+    .replace("</body></html>",
+      `<script>function go(){window.print();}
+       if(document.fonts&&document.fonts.ready){document.fonts.ready.then(function(){setTimeout(go,200);});}else{window.onload=function(){setTimeout(go,200);};}<\/script></body></html>`);
+  w.document.open(); w.document.write(withBar); w.document.close();
 }
 
 function toast(msg, type = "ok") {
@@ -828,11 +843,11 @@ const Reports = {
         <td class="n">${money(it.amount)}</td><td class="n">${money(it.paid)}</td>
         <td class="n">${money(it.remaining)}</td><td>${esc(it.status)}</td>
       </tr>`).join("");
-    const html = `<!DOCTYPE html><html lang="ckb" dir="rtl"><head><meta charset="UTF-8"><title>ڕاپۆرت</title><style>
+    const html = `<!DOCTYPE html><html lang="ckb" dir="rtl"><head><meta charset="UTF-8"><meta name="viewport" content="width=device-width, initial-scale=1"><title>ڕاپۆرت</title><style>
       @font-face{font-family:"Vazirmatn";src:url("${location.origin}/assets/fonts/Vazirmatn.woff2") format("woff2");}
       @page{size:A4 landscape;margin:12mm;}
       *{font-family:"Vazirmatn",sans-serif;box-sizing:border-box;}
-      body{direction:rtl;color:#0f172a;margin:0;}
+      body{direction:rtl;color:#0f172a;margin:0;padding:16px;}
       h1{text-align:center;font-size:19px;margin:0 0 4px;}
       .sub{text-align:center;color:#64748b;font-size:12px;margin-bottom:16px;}
       .totals{display:flex;gap:12px;justify-content:center;margin-bottom:16px;flex-wrap:wrap;}
@@ -841,7 +856,15 @@ const Reports = {
       table{width:100%;border-collapse:collapse;font-size:12px;}
       th{background:#2563eb;color:#fff;padding:8px;} td{padding:7px 8px;border-bottom:1px solid #e2e8f0;text-align:center;}
       td.n{font-weight:700;} tr:nth-child(even) td{background:#f8fafc;}
+      .bar{position:sticky;top:0;display:flex;gap:10px;justify-content:center;padding:12px;background:#f1f5f9;border-radius:12px;margin-bottom:16px;}
+      .bar button{border:none;border-radius:10px;padding:11px 20px;font-size:15px;font-weight:700;cursor:pointer;font-family:inherit;}
+      .bar .pr{background:#2563eb;color:#fff;} .bar .cl{background:#e2e8f0;color:#0f172a;}
+      @media print { .bar{display:none;} body{padding:0;} }
       </style></head><body>
+      <div class="bar">
+        <button class="pr" onclick="window.print()">🖨️ چاپ / خەزنکردن وەک PDF</button>
+        <button class="cl" onclick="window.close()">✕ گەڕانەوە</button>
+      </div>
       <h1>مارکێتی بەهەند — ڕاپۆرتی قەرز (${PL[r.period] || r.period})</h1>
       <div class="sub">لە ${esc(r.date_from)} بۆ ${esc(r.date_to)}</div>
       <div class="totals">
@@ -851,8 +874,6 @@ const Reports = {
       </div>
       <table><thead><tr><th>بەروار</th><th>ناوی کڕیار</th><th>بابەت</th><th>بڕی قەرز</th><th>پارەی دراو</th><th>ماوە</th><th>دۆخ</th></tr></thead>
       <tbody>${rows}</tbody></table>
-      <script>function go(){window.print();setTimeout(function(){window.close();},500);}
-      if(document.fonts&&document.fonts.ready){document.fonts.ready.then(function(){setTimeout(go,150);});}else{window.onload=go;}<\/script>
       </body></html>`;
     const w = window.open("", "_blank");
     if (!w) { toast("تکایە ڕێگە بە پەنجەرەی نوێ بدە", "err"); return; }
