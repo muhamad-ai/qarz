@@ -132,6 +132,7 @@ input[type="date"], input[type="search"], input[type="email"], textarea { cursor
 
 .input, select, textarea {
   width: 100%;
+  min-width: 0;
   padding: 11px 14px;
   border: 1.5px solid var(--border);
   border-radius: var(--radius-sm);
@@ -458,7 +459,7 @@ select.input {
 .modal.wide { max-width: 720px; }
 .modal-head { display: flex; align-items: center; justify-content: space-between; padding: 20px 24px; border-bottom: 1px solid var(--border); }
 .modal-head h3 { font-size: 18px; font-weight: 800; }
-.modal-body { padding: 22px 24px; }
+.modal-body { padding: 22px 24px; overflow-x: hidden; }
 .modal-foot { display: flex; gap: 10px; justify-content: flex-start; padding: 16px 24px; border-top: 1px solid var(--border); background: #f8fafc; border-radius: 0 0 18px 18px; }
 .grid-2 { display: grid; grid-template-columns: 1fr 1fr; gap: 14px; }
 
@@ -568,17 +569,26 @@ select.input {
   .rc-figures { gap: 6px; }
   .rc-figures .fig { padding: 7px 4px; }
   .rc-figures .v { font-size: 13px; }
-  .statement-table { font-size: 12px; }
-  .statement-table thead th, .statement-table tbody td { padding: 7px 4px; }
-  /* شاردنەوەی ستوونی «بابەت» لەسەر شاشەی زۆر بچووک */
-  .statement-table th:nth-child(3), .statement-table td:nth-child(3) { display: none; }
+  .statement-table { font-size: 10.5px; }
+  .statement-table thead th, .statement-table tbody td { padding: 6px 3px; }
 }
 
 /* لەسەر مۆبایل: ستوونی «جۆر» بشارەوە (جۆر لە ستوونەکانی +/− دیارە) */
 @media (max-width: 640px) {
   .statement-table th:nth-child(2), .statement-table td:nth-child(2) { display: none; }
-  .statement-table td.num, .statement-table th { white-space: nowrap; }
+  .statement-table { font-size: 11px; table-layout: fixed; width: 100%; }
+  .statement-table thead th, .statement-table tbody td { padding: 7px 3px; white-space: normal; word-break: break-word; }
+  .statement-table td.num { white-space: nowrap; }        /* ژمارە و بەروار ناشکێن */
+  .statement-table th:nth-child(3), .statement-table td:nth-child(3) { width: 20%; }  /* بابەت */
   .cd-statement-head { flex-wrap: wrap; gap: 8px; }
+
+  /* خانەکانی فۆرم بچووکتر تا نەشکێن */
+  .input, select, textarea { font-size: 14px; padding: 10px 10px; }
+  input[type="date"] { font-size: 13px; padding: 10px 4px; }
+  .field label { font-size: 13px; }
+  .cd-summary { gap: 6px; }
+  .cd-sum-card .v { font-size: 14px; }
+  .cd-sum-card .l { font-size: 11px; }
 }
 .menu-toggle { display: none; }
 
