@@ -153,9 +153,20 @@ textarea { resize: vertical; min-height: 70px; }
 .field { min-width: 0; }
 .grid-3, .grid-2 { min-width: 0; }
 .grid-3 .field, .grid-2 .field { min-width: 0; }
-input[type="date"] { text-align: right; width: 100%; max-width: 100%; min-width: 0; box-sizing: border-box; }
+input[type="date"] {
+  text-align: right; width: 100%; max-width: 100%; min-width: 0;
+  box-sizing: border-box; position: relative; padding-left: 40px;
+  background-image: url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' width='16' height='16' viewBox='0 0 24 24' fill='none' stroke='%2364748b' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'><rect x='3' y='4' width='18' height='18' rx='2'/><line x1='16' y1='2' x2='16' y2='6'/><line x1='8' y1='2' x2='8' y2='6'/><line x1='3' y1='10' x2='21' y2='10'/></svg>");
+  background-repeat: no-repeat; background-position: left 12px center;
+}
+/* شاردنەوەی ئایکۆنی ناوەکی وێبگەڕ (کە پانی زیادە دروست دەکات) */
+input[type="date"]::-webkit-calendar-picker-indicator {
+  position: absolute; left: 0; top: 0; width: 100%; height: 100%;
+  margin: 0; padding: 0; opacity: 0; cursor: pointer;
+}
+input[type="date"]::-webkit-inner-spin-button,
+input[type="date"]::-webkit-clear-button { display: none; -webkit-appearance: none; }
 input[type="date"]::-webkit-datetime-edit { text-align: right; }
-input[type="date"]::-webkit-calendar-picker-indicator { margin-inline-start: 0; margin-inline-end: 0; }
 
 /* چارت — نەهێشتنی دەرچوون و مانەوە لە ناوەڕاست */
 .chart-box canvas { max-width: 100% !important; margin: 0 auto; }
@@ -613,7 +624,14 @@ select.input {
 
   /* ---- خانەکانی فۆرم بچووکتر تا نەشکێن ---- */
   .input, select, textarea { font-size: 14px; padding: 10px 10px; }
-  input[type="date"] { font-size: 13px; padding: 10px 4px; }
+  input[type="date"] {
+    font-size: 14px; padding: 11px 12px 11px 40px;
+    -webkit-appearance: none; appearance: none;
+    width: 100%; max-width: 100%; min-width: 0; box-sizing: border-box;
+    text-align: right;
+  }
+  .cd-pay .field, .cd-pay .input { max-width: 100%; min-width: 0; }
+  .cd-pay { overflow: hidden; }
   .field label { font-size: 13px; }
   .cd-summary { gap: 6px; }
   .cd-sum-card .v { font-size: 14px; }
