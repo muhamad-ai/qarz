@@ -459,7 +459,7 @@ select.input {
 .modal.wide { max-width: 720px; }
 .modal-head { display: flex; align-items: center; justify-content: space-between; padding: 20px 24px; border-bottom: 1px solid var(--border); }
 .modal-head h3 { font-size: 18px; font-weight: 800; }
-.modal-body { padding: 22px 24px; overflow-x: hidden; }
+.modal-body { padding: 22px 24px; }
 .modal-foot { display: flex; gap: 10px; justify-content: flex-start; padding: 16px 24px; border-top: 1px solid var(--border); background: #f8fafc; border-radius: 0 0 18px 18px; }
 .grid-2 { display: grid; grid-template-columns: 1fr 1fr; gap: 14px; }
 
@@ -575,14 +575,32 @@ select.input {
 
 /* لەسەر مۆبایل: ستوونی «جۆر» بشارەوە (جۆر لە ستوونەکانی +/− دیارە) */
 @media (max-width: 640px) {
-  .statement-table th:nth-child(2), .statement-table td:nth-child(2) { display: none; }
-  .statement-table { font-size: 11px; table-layout: fixed; width: 100%; }
-  .statement-table thead th, .statement-table tbody td { padding: 7px 3px; white-space: normal; word-break: break-word; }
-  .statement-table td.num { white-space: nowrap; }        /* ژمارە و بەروار ناشکێن */
-  .statement-table th:nth-child(3), .statement-table td:nth-child(3) { width: 20%; }  /* بابەت */
+  /* ---- خشتەی کشف حساب ---- */
+  .statement-table { font-size: 11px; table-layout: fixed !important; width: 100% !important; }
+  .statement-table th:nth-child(2), .statement-table td:nth-child(2) { display: none; }  /* جۆر */
+  .statement-table thead th, .statement-table tbody td { padding: 7px 2px; white-space: normal; word-break: break-word; }
+  .statement-table td:nth-child(1) { white-space: nowrap; }  /* بەروار */
+  /* پانی ستوونەکان (جۆر شاردراوەتەوە) */
+  .statement-table th:nth-child(1), .statement-table td:nth-child(1) { width: 19%; }  /* بەروار */
+  .statement-table th:nth-child(3), .statement-table td:nth-child(3) { width: 17%; }  /* بابەت */
+  .statement-table th:nth-child(4), .statement-table td:nth-child(4) { width: 17%; }  /* قەرز */
+  .statement-table th:nth-child(5), .statement-table td:nth-child(5) { width: 17%; }  /* پارەدانەوە */
+  .statement-table th:nth-child(6), .statement-table td:nth-child(6) { width: 16%; }  /* باڵانس */
+  .statement-table th:nth-child(7), .statement-table td:nth-child(7) { width: 14%; }  /* کردار */
+  .statement-table .t-actions { gap: 2px; justify-content: center; }
+  .statement-table .t-actions .btn-icon { padding: 3px; font-size: 14px; min-width: 0; }
+
   .cd-statement-head { flex-wrap: wrap; gap: 8px; }
 
-  /* خانەکانی فۆرم بچووکتر تا نەشکێن */
+  /* ---- خشتەی کڕیارەکان: ستوونە کەم‌گرنگەکان بشارەوە ---- */
+  #page-customers table { font-size: 12px; table-layout: fixed; width: 100%; }
+  #page-customers thead th, #page-customers tbody td { padding: 9px 5px; white-space: normal; word-break: break-word; }
+  #page-customers th:nth-child(3), #page-customers td:nth-child(3),   /* ناونیشان */
+  #page-customers th:nth-child(6), #page-customers td:nth-child(6) { display: none; }  /* تێبینی */
+  #page-customers td:nth-child(2) { white-space: nowrap; }  /* مۆبایل */
+  #page-customers td:nth-child(4), #page-customers td:nth-child(5) { white-space: nowrap; }  /* کۆی قەرز، ماوە */
+
+  /* ---- خانەکانی فۆرم بچووکتر تا نەشکێن ---- */
   .input, select, textarea { font-size: 14px; padding: 10px 10px; }
   input[type="date"] { font-size: 13px; padding: 10px 4px; }
   .field label { font-size: 13px; }
