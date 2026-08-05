@@ -153,8 +153,8 @@ textarea { resize: vertical; min-height: 70px; }
 .field { min-width: 0; }
 .grid-3, .grid-2 { min-width: 0; }
 .grid-3 .field, .grid-2 .field { min-width: 0; }
-input[type="date"] { text-align: center; direction: ltr; }
-input[type="date"]::-webkit-datetime-edit { text-align: center; }
+input[type="date"] { text-align: right; }
+input[type="date"]::-webkit-datetime-edit { text-align: right; }
 input[type="date"]::-webkit-calendar-picker-indicator { margin-inline-start: 0; }
 
 /* چارت — نەهێشتنی دەرچوون و مانەوە لە ناوەڕاست */
