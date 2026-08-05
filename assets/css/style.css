@@ -148,6 +148,16 @@ input[type="date"], input[type="search"], input[type="email"], textarea { cursor
 }
 textarea { resize: vertical; min-height: 70px; }
 
+/* ڕێگری لە دەرچوونی خانەکان لە فۆرم/grid + ناوەڕاستکردنی بەروار */
+.field { min-width: 0; }
+.grid-3, .grid-2 { min-width: 0; }
+.grid-3 .field, .grid-2 .field { min-width: 0; }
+input[type="date"] { text-align: center; }
+input[type="date"]::-webkit-calendar-picker-indicator { margin-inline-start: 0; }
+
+/* چارت — نەهێشتنی دەرچوون و مانەوە لە ناوەڕاست */
+.chart-box canvas { max-width: 100% !important; margin: 0 auto; }
+
 /* ---------------- دوگمەکان ---------------- */
 .btn {
   display: inline-flex; align-items: center; justify-content: center; gap: 8px;
