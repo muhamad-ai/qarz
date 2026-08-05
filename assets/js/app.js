@@ -328,7 +328,7 @@ const Customers = {
           <td class="wrap">${esc(c.notes) || "—"}</td>
           <td><div class="t-actions">
             <button class="btn-icon" title="دەستکاری" onclick='Customers.openForm(${JSON.stringify(c)})'>✏️</button>
-            ${CURRENT_USER.role === "admin" ? `<button class="btn-icon danger" title="سڕینەوە" onclick="Customers.remove(${c.id}, '${esc(c.name)}')">🗑️</button>` : ""}
+            ${CURRENT_USER.role === "admin" ? `<button class="btn-icon danger" title="سڕینەوە" onclick="Customers.remove('${c.id}', '${esc(c.name)}')">🗑️</button>` : ""}
           </div></td>
         </tr>`).join("");
     }
@@ -412,7 +412,7 @@ const Debts = {
       body.innerHTML = `<div class="empty"><div class="big">🧾</div>هیچ قەرزێک نییە</div>`;
     } else {
       body.innerHTML = slice.map((c) => `
-        <div class="rec-card cd-clickable" onclick="CustomerDebts.open(${c.id})">
+        <div class="rec-card cd-clickable" onclick="CustomerDebts.open('${c.id}')">
           <div class="rc-head">
             <div class="rc-title">
               <span class="rc-name">${esc(c.name)}</span>
@@ -447,7 +447,7 @@ const Debts = {
       .map((c) => `<option value="${c.id}">${esc(c.name)}${c.phone ? " — " + esc(c.phone) : ""}</option>`).join("");
     $("debtModalTitle").textContent = d ? "دەستکاریکردنی قەرز" : "قەرزی نوێ";
     $("debtId").value = d?.id || "";
-    $("debtCustomer").value = d?.customer_id || Debts.customers[0].id;
+    $("debtCustomer").value = d?.customerId || Debts.customers[0].id;
     $("debtDate").value = d?.date || todayISO();
     $("debtAmount").value = d?.amount ?? "";
     $("debtSubject").value = d?.subject || "";
@@ -463,7 +463,7 @@ const Debts = {
     if (!$("debtDate").value) { toast("بەروار پێویستە", "err"); return; }
     if (isNaN(amount) || amount < 0) { toast("بڕی پارە دروست نییە", "err"); return; }
     const body = {
-      customer_id: parseInt($("debtCustomer").value),
+      customerId: $("debtCustomer").value,
       date: $("debtDate").value,
       subject: $("debtSubject").value.trim() || null,
       amount,
@@ -508,7 +508,7 @@ const CustomerDebts = {
     const d = CustomerDebts.detail;
     const list = [];
     d.debts.forEach((x) => list.push({ kind: "debt", id: x.id, date: x.date, subject: x.subject, amount: x.amount, raw: x }));
-    d.payments.forEach((p) => list.push({ kind: "payment", id: p.id, date: p.payment_date, subject: p.debt_subject, amount: p.amount, notes: p.notes }));
+    d.payments.forEach((p) => list.push({ kind: "payment", id: p.id, date: p.date, subject: p.notes || null, amount: p.amount, notes: p.notes }));
     // ڕیزکردن بەپێی بەروار (کۆنترین سەرەوە)، پاشان بەپێی جۆر (قەرز پێش پارەدانەوە)
     list.sort((a, b) => {
       if (a.date !== b.date) return a.date < b.date ? -1 : 1;
@@ -542,7 +542,7 @@ const CustomerDebts = {
           <td class="num"><b>${money(e.balance)}</b></td>
           <td><div class="t-actions">
             ${e.kind === "debt" ? `<button class="btn-icon" title="دەستکاری" onclick='CustomerDebts.editDebt(${JSON.stringify(e.raw)})'>✏️</button>` : ""}
-            ${isAdmin ? `<button class="btn-icon danger" title="سڕینەوە" onclick="CustomerDebts.${e.kind === "debt" ? "removeDebt" : "removePayment"}(${e.id})">🗑️</button>` : ""}
+            ${isAdmin ? `<button class="btn-icon danger" title="سڕینەوە" onclick="CustomerDebts.${e.kind === "debt" ? "removeDebt" : "removePayment"}('${e.id}')">🗑️</button>` : ""}
           </div></td>
         </tr>`).join("");
   },
