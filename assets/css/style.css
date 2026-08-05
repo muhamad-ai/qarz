@@ -152,7 +152,8 @@ textarea { resize: vertical; min-height: 70px; }
 .field { min-width: 0; }
 .grid-3, .grid-2 { min-width: 0; }
 .grid-3 .field, .grid-2 .field { min-width: 0; }
-input[type="date"] { text-align: center; }
+input[type="date"] { text-align: center; direction: ltr; }
+input[type="date"]::-webkit-datetime-edit { text-align: center; }
 input[type="date"]::-webkit-calendar-picker-indicator { margin-inline-start: 0; }
 
 /* چارت — نەهێشتنی دەرچوون و مانەوە لە ناوەڕاست */
@@ -549,7 +550,8 @@ select.input {
   .chart-box { height: 260px; }
   .page-head { flex-direction: column; align-items: flex-start; gap: 6px; }
   .toolbar { flex-wrap: wrap; gap: 8px; }
-  .toolbar .input, .toolbar .search-box { width: 100%; max-width: none; }
+  .toolbar .input, .toolbar .search-box, .toolbar select.input { width: 100%; max-width: none !important; }
+  .toolbar .btn { width: 100%; }
   .head-actions { flex-wrap: wrap; }
   .rec-cards { grid-template-columns: 1fr; }
   .cd-summary { gap: 8px; }
