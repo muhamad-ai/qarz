@@ -32,7 +32,7 @@ const LOGO_CSS = `
 
 /* سەردێڕی پسوڵە لەگەڵ لۆگۆ */
 function receiptHead(subtitle) {
-  return `<div class="rhead">${STORE_LOGO}
+  return `<div class="rhead">
     <div class="rstore">${esc(STORE_NAME)}</div>
     <div class="rtag">M A R K E T</div>
   </div>

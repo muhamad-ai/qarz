@@ -13,6 +13,13 @@
 </head>
 <body>
 
+<!-- شریتی سەرەوەی مۆبایل (تەنها لەسەر شاشەی بچووک دەردەکەوێت) -->
+<div class="mobile-topbar">
+  <button class="menu-btn" aria-label="مێنیو" onclick="document.body.classList.toggle('nav-open')">☰</button>
+  <span class="mtb-title">قەرزی کڕیار</span>
+</div>
+<div class="nav-backdrop" onclick="document.body.classList.remove('nav-open')"></div>
+
 <div class="app" id="app">
   <!-- ============ سایدبار ============ -->
   <aside class="sidebar">
@@ -60,7 +67,6 @@
           <h1>📊 داشبۆرد</h1>
           <div class="sub">پوختەی گشتی قەرز و پارەدانەوەکان</div>
         </div>
-        <button class="btn btn-ghost menu-toggle" onclick="document.body.classList.toggle('nav-open')">☰</button>
       </div>
 
       <div class="stat-grid" id="statGrid"></div>

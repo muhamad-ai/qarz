@@ -508,18 +508,56 @@ select.input {
   .stat-grid { grid-template-columns: repeat(auto-fill, minmax(min(100%, 168px), 1fr)); }
 }
 /* شاشەی بچووک / مۆبایل */
+.mobile-topbar { display: none; }
+.nav-backdrop { display: none; }
+
 @media (max-width: 860px) {
   .app.show { grid-template-columns: 1fr; }
-  .sidebar { position: fixed; z-index: 90; width: 258px; height: 100vh; transform: translateX(100%); transition: transform .25s; }
+  .sidebar { position: fixed; z-index: 95; width: 258px; height: 100vh; top: 0; right: 0; transform: translateX(100%); transition: transform .25s; }
   body.nav-open .sidebar { transform: none; }
-  .main { padding: 16px; }
+
+  /* شریتی سەرەوەی مۆبایل */
+  .mobile-topbar {
+    display: flex; align-items: center; gap: 12px;
+    position: fixed; top: 0; right: 0; left: 0; height: 54px; z-index: 80;
+    background: var(--sidebar-bg); color: #fff; padding: 0 14px;
+    box-shadow: 0 2px 8px rgba(0,0,0,.15);
+  }
+  .mobile-topbar .menu-btn {
+    background: rgba(255,255,255,.12); color: #fff; border: none;
+    width: 40px; height: 40px; border-radius: 10px; font-size: 20px; cursor: pointer;
+    display: flex; align-items: center; justify-content: center;
+  }
+  .mobile-topbar .mtb-title { font-weight: 800; font-size: 16px; }
+
+  /* backdrop کاتێک مێنیو کراوەیە */
+  body.nav-open .nav-backdrop { display: block; position: fixed; inset: 0; background: rgba(0,0,0,.45); z-index: 90; }
+
+  .main { padding: 16px; padding-top: 68px; }   /* جێگە بۆ شریتی سەرەوە */
   .grid-2, .report-summary { grid-template-columns: 1fr; }
-  .stat-grid { grid-template-columns: repeat(2, 1fr); }
-  .menu-toggle { display: inline-flex !important; }
+  .stat-grid { grid-template-columns: repeat(2, 1fr); gap: 12px; }
+  .chart-box { height: 260px; }
+  .page-head { flex-direction: column; align-items: flex-start; gap: 6px; }
+  .toolbar { flex-wrap: wrap; gap: 8px; }
+  .toolbar .input, .toolbar .search-box { width: 100%; max-width: none; }
+  .head-actions { flex-wrap: wrap; }
+  .rec-cards { grid-template-columns: 1fr; }
+  .cd-summary { gap: 8px; }
+  .cd-sum-card { min-width: 0; padding: 10px 8px; }
+  .cd-sum-card .v { font-size: 15px; }
+  .modal { width: 96vw; max-width: 96vw; }
+  .modal-body { max-height: 72vh; }
+  table { font-size: 13px; }
+  thead th, tbody td { padding: 9px 8px; }
 }
+
 @media (max-width: 480px) {
   .stat-grid { grid-template-columns: 1fr; }
-  .page-head { align-items: flex-start; }
+  .rc-figures { gap: 6px; }
+  .rc-figures .fig { padding: 7px 4px; }
+  .rc-figures .v { font-size: 13px; }
+  .statement-table { font-size: 12px; }
+  .statement-table thead th, .statement-table tbody td { padding: 7px 4px; }
 }
 .menu-toggle { display: none; }
 
