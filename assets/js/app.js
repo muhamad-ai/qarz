@@ -320,13 +320,13 @@ const Customers = {
     } else {
       body.innerHTML = slice.map((c) => `
         <tr>
-          <td class="name-cell"><b>${esc(c.name)}</b></td>
-          <td class="num">${esc(c.phone) || "—"}</td>
-          <td class="wrap">${esc(c.address) || "—"}</td>
-          <td class="num">${money(c.total_debt)}</td>
-          <td class="num" style="color:${c.remaining > 0 ? "var(--danger)" : "var(--success)"}">${money(c.remaining)}</td>
-          <td class="wrap">${esc(c.notes) || "—"}</td>
-          <td><div class="t-actions">
+          <td data-label="ناو" class="name-cell"><b>${esc(c.name)}</b></td>
+          <td data-label="مۆبایل" class="num">${esc(c.phone) || "—"}</td>
+          <td data-label="ناونیشان" class="wrap">${esc(c.address) || "—"}</td>
+          <td data-label="کۆی قەرز" class="num">${money(c.total_debt)}</td>
+          <td data-label="ماوە" class="num" style="color:${c.remaining > 0 ? "var(--danger)" : "var(--success)"}">${money(c.remaining)}</td>
+          <td data-label="تێبینی" class="wrap">${esc(c.notes) || "—"}</td>
+          <td data-label="کردار"><div class="t-actions">
             <button class="btn-icon" title="دەستکاری" onclick='Customers.openForm(${JSON.stringify(c)})'>✏️</button>
             ${CURRENT_USER.role === "admin" ? `<button class="btn-icon danger" title="سڕینەوە" onclick="Customers.remove('${c.id}', '${esc(c.name)}')">🗑️</button>` : ""}
           </div></td>
@@ -534,13 +534,13 @@ const CustomerDebts = {
       ? `<tr><td colspan="7"><div class="empty" style="padding:24px">هیچ تۆمارێک نییە</div></td></tr>`
       : rows.map((e) => `
         <tr class="${e.kind === "debt" ? "row-debt" : "row-pay"}">
-          <td class="num">${esc(e.date)}</td>
-          <td>${e.kind === "debt" ? "🛒 قەرز" : "💵 پارەدانەوە"}</td>
-          <td>${esc(e.subject) || (e.kind === "payment" ? (esc(e.notes) || "—") : "—")}</td>
-          <td class="num" style="color:var(--danger)">${e.kind === "debt" ? money(e.amount) : ""}</td>
-          <td class="num" style="color:var(--success)">${e.kind === "payment" ? money(e.amount) : ""}</td>
-          <td class="num"><b>${money(e.balance)}</b></td>
-          <td><div class="t-actions">
+          <td data-label="بەروار" class="num">${esc(e.date)}</td>
+          <td data-label="جۆر">${e.kind === "debt" ? "🛒 قەرز" : "💵 پارەدانەوە"}</td>
+          <td data-label="بابەت">${esc(e.subject) || (e.kind === "payment" ? (esc(e.notes) || "—") : "—")}</td>
+          <td data-label="قەرز (+)" class="num" style="color:var(--danger)">${e.kind === "debt" ? money(e.amount) : ""}</td>
+          <td data-label="پارە دانەوە (−)" class="num" style="color:var(--success)">${e.kind === "payment" ? money(e.amount) : ""}</td>
+          <td data-label="باڵانس" class="num"><b>${money(e.balance)}</b></td>
+          <td data-label=""><div class="t-actions">
             ${e.kind === "debt" ? `<button class="btn-icon" title="دەستکاری" onclick='CustomerDebts.editDebt(${JSON.stringify(e.raw)})'>✏️</button>` : ""}
             ${isAdmin ? `<button class="btn-icon danger" title="سڕینەوە" onclick="CustomerDebts.${e.kind === "debt" ? "removeDebt" : "removePayment"}('${e.id}')">🗑️</button>` : ""}
           </div></td>
