@@ -1,5 +1,5 @@
 /* Service Worker — کاشکردنی ڕووکار بۆ کارکردنی خێراتر و PWA */
-const CACHE = "qarz-online-v22";
+const CACHE = "qarz-online-v23";
 const ASSETS = [
   "./index.html",
   "./app.html",

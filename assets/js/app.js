@@ -317,7 +317,14 @@ const Dashboard = {
           },
         },
         scales: {
-          x: { grid: { display: false }, ticks: { font: { family: "Vazirmatn", size: 11 } } },
+          x: {
+            grid: { display: false },
+            ticks: {
+              font: { family: "Vazirmatn", size: 10 },
+              autoSkip: false,          // هەموو مانگەکان پیشان بدرێن (هیچ مانگێک نەپەڕێت)
+              maxRotation: 90, minRotation: 55,
+            },
+          },
           y: { ticks: { font: { family: "Vazirmatn" }, callback: (v) => fmt(v) }, grid: { color: "#f1f5f9" } },
         },
       },
