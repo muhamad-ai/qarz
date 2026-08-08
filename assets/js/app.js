@@ -56,10 +56,8 @@ const LOGO_CSS = `
 /* سەردێڕی پسوڵە لەگەڵ لۆگۆ */
 function receiptHead(subtitle) {
   return `<div class="rhead">
-    <div class="rstore">${esc(STORE_NAME)}</div>
-    <div class="rtag">M A R K E T</div>
-  </div>
-  <div class="rline"><span>${esc(subtitle)}</span></div>`;
+    <div class="rline"><span>${esc(subtitle)}</span></div>
+  </div>`;
 }
 
 /* ---------------- چاپی وەسڵی پارەدانەوە (٨٠mm POS) ---------------- */
@@ -115,7 +113,7 @@ ${LOGO_CSS}
   <div class="center foot">
     <div>کڕیار: <b>${esc(debt.customer_name)}</b></div>
     <div>بەروار: ${esc(dt)}</div>
-    <div style="margin-top:6px">سوپاس بۆ متمانەتان 🌹<br>${esc(STORE_NAME)}</div>
+    <div style="margin-top:6px">سوپاس بۆ متمانەتان</div>
   </div>
 </body></html>`;
     printDoc(html);
@@ -694,7 +692,7 @@ const CustomerDebts = {
         <div class="big"><span>ماوە:</span><span>${money(d.remaining)}</span></div>
       </div>
       <hr>
-      <div class="center foot">سوپاس بۆ متمانەتان<br>${esc(STORE_NAME)}</div>
+      <div class="center foot">سوپاس بۆ متمانەتان</div>
       </body></html>`;
     printDoc(html);
   },
@@ -893,7 +891,7 @@ const Reports = {
         <button class="pr" onclick="window.print()">🖨️ چاپ / خەزنکردن وەک PDF</button>
         <button class="cl" onclick="window.close()">✕ گەڕانەوە</button>
       </div>
-      <h1>مارکێتی بەهەند — ڕاپۆرتی قەرز (${PL[r.period] || r.period})</h1>
+      <h1>ڕاپۆرتی قەرز (${PL[r.period] || r.period})</h1>
       <div class="sub">لە ${esc(r.date_from)} بۆ ${esc(r.date_to)}</div>
       <div class="totals">
         <div class="tot"><div class="l">کۆی قەرز</div><div class="v">${money(r.total_debt)}</div></div>
