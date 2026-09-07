@@ -464,7 +464,11 @@ const Debts = {
             <div class="fig"><span class="lbl">دراو</span><span class="v ok">${money(c.total_paid)}</span></div>
             <div class="fig"><span class="lbl">ماوە</span><span class="v ${c.remaining > 0 ? "bad" : "ok"}">${money(c.remaining)}</span></div>
           </div>
-          <div class="rc-open">کلیک بکە بۆ بینینی قەرزەکان و پارەدانەوە ◀</div>
+          <div class="rc-actions">
+            <button class="rc-btn debt" onclick="event.stopPropagation(); Debts.openForm({customerId:'${c.id}'})">➕ قەرزی نوێ</button>
+            <button class="rc-btn pay" onclick="event.stopPropagation(); CustomerDebts.open('${c.id}')">💵 پارەدانەوە</button>
+          </div>
+          <div class="rc-open">کلیک بکە بۆ بینینی کشف حساب ◀</div>
         </div>`).join("");
     }
     renderPager("debtPager", list.length, st, Debts.render);
