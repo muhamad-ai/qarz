@@ -557,7 +557,7 @@ select.input {
 
 @media (max-width: 860px) {
   .app.show { grid-template-columns: 1fr; }
-  .sidebar { position: fixed; z-index: 95; width: 258px; height: 100vh; height: 100dvh; top: 0; right: 0; transform: translateX(100%); transition: transform .25s; padding-bottom: calc(20px + env(safe-area-inset-bottom)); }
+  .sidebar { position: fixed; z-index: 95; width: 258px; top: 0; bottom: 0; height: auto; right: 0; transform: translateX(100%); transition: transform .25s; padding-bottom: calc(20px + env(safe-area-inset-bottom)); }
   body.nav-open .sidebar { transform: none; }
 
   /* شریتی سەرەوەی مۆبایل */
