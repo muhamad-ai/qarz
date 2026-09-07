@@ -590,8 +590,14 @@ select.input {
   .cd-summary { gap: 8px; }
   .cd-sum-card { min-width: 0; padding: 10px 8px; }
   .cd-sum-card .v { font-size: 15px; }
-  .modal { width: 96vw; max-width: 96vw; }
-  .modal-body { max-height: 72vh; }
+  .modal { width: 96vw; max-width: 96vw; max-height: 88vh; }
+  .modal-overlay { padding: 12px; }
+  .modal-head { padding: 15px 18px; }
+  .modal-head h3 { font-size: 16px; }
+  .modal-body { padding: 18px; max-height: 68vh; }
+  .modal-foot { padding: 14px 18px; }
+  .modal-foot .btn { flex: 1; padding: 13px 10px; }   /* دوگمەکان یەکسان و پڕ بەرەبەر */
+  .field { margin-bottom: 14px; }
   table { font-size: 13px; }
   thead th, tbody td { padding: 9px 8px; }
 }
